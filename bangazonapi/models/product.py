@@ -65,7 +65,7 @@ class Product(SafeDeleteModel):
         try: 
             avg = total_rating / len(ratings)
         except ZeroDivisionError:
-            avg = 'Not Rated Yet'
+            avg = None
         return avg
 
     class Meta:
