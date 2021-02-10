@@ -274,7 +274,12 @@ class Products(ViewSet):
             products = filter(sold_filter, products)
         
         if min_price is not None:
-            products = products.filter(price >= min_price)
+            def min_filter(product):
+                if product.price >= int(min_price):
+                    return True 
+                return False
+
+            products = filter(min_filter, products)
 
         serializer = ProductSerializer(
             products, many=True, context={'request': request})
