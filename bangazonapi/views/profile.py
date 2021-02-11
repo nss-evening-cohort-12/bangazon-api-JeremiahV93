@@ -211,7 +211,7 @@ class Profile(ViewSet):
                 print(open_order)
             except Order.DoesNotExist as ex:
                 open_order = Order()
-                open_order.created_date = datetime.datetime.now()
+                open_order.created_date = date.datetime.now()
                 open_order.customer = current_user
                 open_order.save()
 
