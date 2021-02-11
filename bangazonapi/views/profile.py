@@ -207,7 +207,7 @@ class Profile(ViewSet):
             """
 
             try:
-                open_order = Order.objects.get(customer=current_user)
+                open_order = Order.objects.get(customer=current_user, payment_type=None)
                 print(open_order)
             except Order.DoesNotExist as ex:
                 open_order = Order()
@@ -283,6 +283,17 @@ class Profile(ViewSet):
         return Response(serializer.data)
 
 
+class OrderSerializer(serializers.HyperlinkedModelSerializer):
+    """JSON serializer for customer orders"""
+
+    class Meta:
+        model = Order
+        url = serializers.HyperlinkedIdentityField(
+            view_name='order',
+            lookup_field='id'
+        )
+        fields = ('id', 'url', 'created_date', 'payment_type', 'customer',)
+
 class LineItemSerializer(serializers.HyperlinkedModelSerializer):
     """JSON serializer for products
 
@@ -290,9 +301,10 @@ class LineItemSerializer(serializers.HyperlinkedModelSerializer):
         serializers
     """
     product = ProductSerializer(many=False)
+    order = OrderSerializer(many=False)
     class Meta:
         model = OrderProduct
-        fields = ('id', 'product')
+        fields = ('id', 'product', 'order')
         depth = 1
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
