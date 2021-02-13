@@ -32,20 +32,20 @@ class PaymentTests(APITestCase):
         Ensure we can add a payment type for a customer.
         """
         # Add product to order
-        # url = "/paymenttypes"
-        # data = {
-        #     "merchant_name": "American Express",
-        #     "account_number": "111-1111-1111",
-        #     "expiration_date": "2024-12-31",
-        #     "create_date": datetime.date.today()
-        # }
-        # self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
-        # response = self.client.post(url, data, format='json')
-        # json_response = json.loads(response.content)
+        url = "/paymenttypes"
+        data = {
+            "merchant_name": "American Express",
+            "account_number": "111-1111-1111",
+            "expiration_date": "2024-12-31",
+            "create_date": datetime.date.today()
+        }
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+        response = self.client.post(url, data, format='json')
+        json_response = json.loads(response.content)
 
-        # self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        # self.assertEqual(json_response["merchant_name"], "American Express")
-        # self.assertEqual(json_response["account_number"], "111-1111-1111")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(json_response["merchant_name"], "American Express")
+        self.assertEqual(json_response["account_number"], "111-1111-1111")
         # self.assertEqual(json_response["expiration_date"], "2024-12-31")
         # self.assertEqual(json_response["create_date"], str(datetime.date.today()))
 
