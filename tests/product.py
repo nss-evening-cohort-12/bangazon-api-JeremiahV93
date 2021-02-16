@@ -2,7 +2,7 @@ import json
 import datetime
 from rest_framework import status
 from rest_framework.test import APITestCase
-from bangazonapi.models import Product, ProductCategory
+from bangazonapi.models import Product, ProductCategory, ProductRating
 
 
 class ProductTests(APITestCase):
@@ -27,6 +27,16 @@ class ProductTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(json_response["name"], "Sporting Goods")
+
+        self.product = Product()
+        self.product.name = "Kite"
+        self.product.price = 14.99
+        self.product.quantity = 60
+        self.product.description = "It flies high"
+        self.product.category_id = 1
+        self.product.location = "Pittsburgh"
+        self.product.customer_id = 1
+        self.product.save()
 
     def test_create_product(self):
         """
@@ -94,7 +104,7 @@ class ProductTests(APITestCase):
         response = self.client.get(url, None, format='json')
         json_response = json.loads(response.content)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(json_response), 3)
+        self.assertEqual(len(json_response), 4)
 
     def test_delete_product(self):
         """
@@ -127,7 +137,28 @@ class ProductTests(APITestCase):
         response = self.client.get(product_url)
         self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+    def test_product_rated(self):
+        """
+        Ensure a product can be rated and that rating is read correctly
+        """
+
+        product_rating = ProductRating()
+        product_rating.product = self.product
+        product_rating.customer_id = 1
+        product_rating.rating = 4
+        product_rating.save()
 
         
+        product_rating2 = ProductRating()
+        product_rating2.product = self.product
+        product_rating2.customer_id = 1
+        product_rating2.rating = 2
+        product_rating2.save()
 
-    # TODO: Product can be rated. Assert average rating exists.
+        url = F"/products/{self.product.id}"
+
+        response = self.client.get(url, None, format='json')
+        json_response = json.loads(response.content)
+
+
+        self.assertEqual(json_response["average_rating"], 3)    
