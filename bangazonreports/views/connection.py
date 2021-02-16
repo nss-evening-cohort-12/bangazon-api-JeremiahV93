@@ -1,2 +1,2 @@
 class Connection:
-    db_path = "/mnt/c/Users/Jeremiah/workspace/python/bandazon-apiJeremiahV93/db.sqlite3"
+    db_path = "/mnt/c/Users/Jeremiah/workspace/python/bangazon-api-JeremiahV93/db.sqlite3"
