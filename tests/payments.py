@@ -2,6 +2,7 @@ import datetime
 import json
 from rest_framework import status
 from rest_framework.test import APITestCase
+from bangazonapi.models import Order, Payment
 
 
 class PaymentTests(APITestCase):
@@ -16,6 +17,14 @@ class PaymentTests(APITestCase):
         json_response = json.loads(response.content)
         self.token = json_response["token"]
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.payment = Payment()
+        self.payment.account_number = "111-1111-1111"
+        self.payment.create_date = datetime.date.today()
+        self.payment.expiration_date = "2024-11-11"
+        self.payment.customer_id = 1
+        self.payment.merchant_name = "Visa"
+        self.payment.save()
 
 
     def test_create_payment_type(self):
@@ -39,5 +48,40 @@ class PaymentTests(APITestCase):
         self.assertEqual(json_response["account_number"], "111-1111-1111")
         self.assertEqual(json_response["expiration_date"], "2024-12-31")
         self.assertEqual(json_response["create_date"], str(datetime.date.today()))
+
+    def test_complete_order(self):
+        """
+        Ensure that an order is completed by adding a payment type
+        """
+        order = Order()
+        order.customer_id = 1
+        order.created_date = datetime.date.today()
+        order.payment_type = None
+        order.save()
+
+        
+
+        data = {
+            "payment_type": self.payment.id
+        }
+
+        url = f"/orders/{order.id}"
+        
+
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+        test_order = Order.objects.get(pk=order.id)
+        test_payment = Payment.objects.get(pk=self.payment.id)
+        self.assertEqual(test_order.payment_type, test_payment)
+
+        
+        
+
+        
+
+        
 
     # TODO: Delete payment type
