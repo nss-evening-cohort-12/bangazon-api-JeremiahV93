@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Bangazon Reports</title>
+  </head>
+  <body>
+    <h1>Products listed by Prices Under $1,000</h1>
+
+    {% for product in products_under_1000 %}
+        <h2>Product Name: {{ product.name }}</h2>
+        <ul>
+            <li>
+                Customer: {{ product.customer.user.first_name }}  {{ product.customer.user.last_name }}
+            </li>
+            <li>
+                Category: {{ product.category.name }}
+            </li>
+            <li>
+                Price: {{ product.price }}
+            </li>
+            <li>
+                Description: {{ product.descripton }}
+            </li>
+            <li>
+                Quantity: {{ product.quantity }}
+            </li>
+            <li>
+                Created On: {{ product.created_date }}
+            </li>
+            <li>
+                Location: {{ product.location }}
+            </li>
+        </ul>
+    {% endfor %}
+  </body>
+</html>
