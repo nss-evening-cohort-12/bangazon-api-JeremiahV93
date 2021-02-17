@@ -3,10 +3,9 @@ from django.shortcuts import render
 from bangazonapi.models import Product, ProductCategory, Customer
 from bangazonreports.views import Connection
 
-def products_over_1000(request):
+def products_equal_or_less_999(request):
     if request.method == 'GET':
 
-        # import pdb; pdb.set_trace()
         with sqlite3.connect(Connection.db_path) as conn:
            
             conn.row_factory = sqlite3.Row
@@ -26,9 +25,8 @@ def products_over_1000(request):
                                 
                 FROM bangazonapi_product p 
                 JOIN bangazonapi_productcategory c ON c.id = p.category_id
-                WHERE p.price > 1000
+                WHERE p.price <= 999
                 ORDER By price DESC 
-
             """)
 
         dataset= db_cursor.fetchall()
@@ -53,9 +51,9 @@ def products_over_1000(request):
             
             products.append(product)
 
-    template = 'products_over_1000.html'
+    template = 'products_listed_under_999.html'
     context = {
-        "products_over_1000": products
+        "products_under_1000": products
     }
 
     return render(request, template, context)
