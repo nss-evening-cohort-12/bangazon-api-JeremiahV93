@@ -53,7 +53,7 @@ def products_over_1000(request):
             
             products.append(product)
 
-    template = 'products_listed_under_999.html'
+    template = 'products_over_1000.html'
     context = {
         "products_over_1000": products
     }

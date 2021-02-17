@@ -6,7 +6,6 @@ from bangazonreports.views import Connection
 def products_equal_or_less_999(request):
     if request.method == 'GET':
 
-        # import pdb; pdb.set_trace()
         with sqlite3.connect(Connection.db_path) as conn:
            
             conn.row_factory = sqlite3.Row
@@ -28,7 +27,6 @@ def products_equal_or_less_999(request):
                 JOIN bangazonapi_productcategory c ON c.id = p.category_id
                 WHERE p.price <= 999
                 ORDER By price DESC 
-
             """)
 
         dataset= db_cursor.fetchall()
