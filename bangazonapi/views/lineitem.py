@@ -75,8 +75,10 @@ class LineItems(ViewSet):
             HTTP/1.1 204 No Content
         """
         try:
-            customer = Customer.objects.get(user=request.auth.user)
-            order_product = OrderProduct.objects.get(pk=pk, order__customer=customer)
+            
+            order_product = OrderProduct.objects.get(pk=pk)
+
+            order_product.delete()
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
