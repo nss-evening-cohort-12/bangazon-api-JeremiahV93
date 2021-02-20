@@ -77,11 +77,10 @@ class PaymentTests(APITestCase):
         test_payment = Payment.objects.get(pk=self.payment.id)
         self.assertEqual(test_order.payment_type, test_payment)
 
+    def test_delete_paymenttype(self):
+        url = "/paymenttypes/1"
         
-        
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+        response = self.client.delete(url)
 
-        
-
-        
-
-    # TODO: Delete payment type
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
